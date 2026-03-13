@@ -1,6 +1,6 @@
 'use strict';
 
-//const conexion = require('../config/database');
+const db = require('../config/database');
 
 let Alumno = function(alumno){
 
@@ -17,30 +17,28 @@ this.Carrera = alumno.Carrera;
 
 // ====================== CREAR ======================
 
-const db = require("../config/database");
+Alumno.create = function(alumno,result){
 
-async function agregarAlumno(req,res){
-  try{
+db.query(
+"INSERT INTO alumnos SET ?",
+alumno,
+function(err,res){
 
-    const {nombre,edad} = req.body;
+if(err)
+result(err,null)
+else
+result(null,res)
 
-    const [result] = await db.query(
-      "INSERT INTO alumnos(nombre,edad) VALUES (?,?)",
-      [nombre,edad]
-    );
+});
 
-    res.json(result);
+};
 
-  }catch(err){
-    res.status(500).json(err);
-  }
-}
 
 // ====================== ELIMINAR ======================
 
 Alumno.delete = function(id,result){
 
-conexion.query(
+db.query(
 "DELETE FROM alumnos WHERE NumControl=?",
 [id],
 function(err,res){
@@ -59,7 +57,7 @@ result(null,res)
 
 Alumno.update = function(id,alumno,result){
 
-conexion.query(
+db.query(
 
 "UPDATE alumnos SET Nombre=?,PrimerAp=?,SegundoAp=?,FechaNac=?,Semestre=?,Carrera=? WHERE NumControl=?",
 
@@ -89,10 +87,8 @@ result(null,res)
 
 Alumno.findAll = function(result){
 
-conexion.query(
-
+db.query(
 "SELECT * FROM alumnos",
-
 function(err,res){
 
 if(err)
@@ -109,12 +105,9 @@ result(null,res)
 
 Alumno.findById = function(id,result){
 
-conexion.query(
-
+db.query(
 "SELECT * FROM alumnos WHERE NumControl=?",
-
 [id],
-
 function(err,res){
 
 if(err)
@@ -131,7 +124,7 @@ result(null,res)
 
 Alumno.search = function(texto,result){
 
-conexion.query(
+db.query(
 
 "SELECT * FROM alumnos WHERE NumControl LIKE ? OR Nombre LIKE ?",
 
