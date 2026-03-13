@@ -6,56 +6,49 @@ const flash = require('express-flash');
 
 const app = express();
 
+// ===== SESIONES =====
 app.use(session({
-secret:'mi_secreto_express',
-resave:false,
-saveUninitialized:false
+  secret: 'mi_secreto_express',
+  resave: false,
+  saveUninitialized: false
 }));
 
 app.use(flash());
 
-app.use('/public', express.static(__dirname + '/public'));
+// ===== ARCHIVOS ESTATICOS =====
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
-app.set('view engine','ejs');
-app.set('views',path.join(__dirname,'views'));
+// ===== MOTOR DE VISTAS =====
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-//const port = 3000;
-
-app.use(bodyParser.urlencoded({extended:false}));
+// ===== BODY PARSER =====
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // ===== VISTAS =====
 
-app.get('/',(req,res)=>{
-res.render('index',{data:req.flash('message')});
+app.get('/', (req, res) => {
+  res.render('index', { data: req.flash('message') });
 });
 
-app.get('/altas',(req,res)=>{
-res.render('altas');
+app.get('/altas', (req, res) => {
+  res.render('altas');
 });
 
-app.get('/consulta',(req,res)=>{
-res.render('consulta');
+app.get('/consulta', (req, res) => {
+  res.render('consulta');
+});
+
+app.get('/editar', (req, res) => {
+  res.render('editar');
 });
 
 // ===== RUTAS =====
-
 const alumno_rutas = require('./routes/alumnos_routes');
+app.use('/alumnos', alumno_rutas);
 
-app.use('/alumnos',alumno_rutas);
-
-app.listen(port,function(){
-
-console.log("Servidor ejecutandose en puerto 3000");
-
-});
-
-
-// ====== EDITAR ======
-app.get('/editar',(req,res)=>{
-res.render('editar');
-});
-
+// ===== PUERTO (IMPORTANTE PARA RENDER) =====
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
