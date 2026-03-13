@@ -3,7 +3,6 @@
 const db = require('../config/database');
 
 let Alumno = function(alumno){
-
 this.NumControl = alumno.NumControl;
 this.Nombre = alumno.Nombre;
 this.PrimerAp = alumno.PrimerAp;
@@ -11,131 +10,52 @@ this.SegundoAp = alumno.SegundoAp;
 this.FechaNac = alumno.FechaNac;
 this.Semestre = alumno.Semestre;
 this.Carrera = alumno.Carrera;
-
 };
 
 
-// ====================== CREAR ======================
-
+// CREAR
 Alumno.create = function(alumno,result){
 
 db.query(
-"INSERT INTO alumnos SET ?",
-alumno,
-function(err,res){
-
-if(err)
-result(err,null)
-else
-result(null,res)
-
-});
-
-};
-
-
-// ====================== ELIMINAR ======================
-
-Alumno.delete = function(id,result){
-
-db.query(
-"DELETE FROM alumnos WHERE NumControl=?",
-[id],
-function(err,res){
-
-if(err)
-result(err,null)
-else
-result(null,res)
-
-});
-
-};
-
-
-// ====================== ACTUALIZAR ======================
-
-Alumno.update = function(id,alumno,result){
-
-db.query(
-
-"UPDATE alumnos SET Nombre=?,PrimerAp=?,SegundoAp=?,FechaNac=?,Semestre=?,Carrera=? WHERE NumControl=?",
-
+`INSERT INTO alumnos
+(NumControl,Nombre,PrimerAp,SegundoAp,FechaNac,Semestre,Carrera)
+VALUES (?,?,?,?,?,?,?)`,
 [
+alumno.NumControl,
 alumno.Nombre,
 alumno.PrimerAp,
 alumno.SegundoAp,
 alumno.FechaNac,
 alumno.Semestre,
-alumno.Carrera,
-id
+alumno.Carrera
 ],
-
 function(err,res){
 
-if(err)
-result(err,null)
-else
-result(null,res)
+if(err){
+console.log(err);
+result(err,null);
+}else{
+result(null,res);
+}
 
 });
 
 };
 
 
-// ====================== CONSULTA TODOS ======================
-
+// CONSULTAR
 Alumno.findAll = function(result){
 
 db.query(
 "SELECT * FROM alumnos",
 function(err,res){
 
-if(err)
-result(err,null)
-else
-result(null,res)
-
-});
-
-};
-
-
-// ====================== CONSULTA POR ID ======================
-
-Alumno.findById = function(id,result){
-
-db.query(
-"SELECT * FROM alumnos WHERE NumControl=?",
-[id],
-function(err,res){
-
-if(err)
-result(err,null)
-else
-result(null,res)
-
-});
-
-};
-
-
-// ====================== BUSQUEDA ======================
-
-Alumno.search = function(texto,result){
-
-db.query(
-
-"SELECT * FROM alumnos WHERE NumControl LIKE ? OR Nombre LIKE ?",
-
-['%'+texto+'%','%'+texto+'%'],
-
-function(err,res){
-
-if(err)
-result(err,null)
-else
-result(null,res)
+if(err){
+console.log(err);
+result(err,null);
+}else{
+result(null,res);
+}
 
 });
 
