@@ -1,6 +1,6 @@
 'use strict';
 
-const conexion = require('../config/database');
+//const conexion = require('../config/database');
 
 let Alumno = function(alumno){
 
@@ -17,22 +17,24 @@ this.Carrera = alumno.Carrera;
 
 // ====================== CREAR ======================
 
-Alumno.create = function(alumno,result){
+const db = require("../config/database");
 
-conexion.query(
-"INSERT INTO alumnos SET ?",
-alumno,
-function(err,res){
+async function agregarAlumno(req,res){
+  try{
 
-if(err)
-result(err,null)
-else
-result(null,res)
+    const {nombre,edad} = req.body;
 
-});
+    const [result] = await db.query(
+      "INSERT INTO alumnos(nombre,edad) VALUES (?,?)",
+      [nombre,edad]
+    );
 
-};
+    res.json(result);
 
+  }catch(err){
+    res.status(500).json(err);
+  }
+}
 
 // ====================== ELIMINAR ======================
 
