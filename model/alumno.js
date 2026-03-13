@@ -21,7 +21,7 @@ Alumno.create = function(alumno,result){
 
 db.query(
 `INSERT INTO alumnos 
-(NumControl,Nombre,PrimerAp,SegundoAp,FechaNac,Semestre,Carrera)
+(num_control,nombre,primer_ap,segundo_ap,fecha_nac,semestre,carrera)
 VALUES (?,?,?,?,?,?,?)`,
 [
 alumno.NumControl,
