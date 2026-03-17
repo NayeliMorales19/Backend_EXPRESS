@@ -22,10 +22,12 @@ Alumno.create(alumno,function(err,data){
 
 if(err){
 console.log(err);
-return res.status(500).send(err);
+req.flash('message', 'Error al guardar alumno');
+return res.redirect('/altas');
 }
 
-res.send("Alumno guardado correctamente");
+req.flash('message', 'Alumno guardado correctamente');
+res.redirect('/');
 
 });
 
