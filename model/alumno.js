@@ -94,3 +94,4 @@ Alumno.update = async function(id, alumno, result){
 };
 
 module.exports = Alumno;
+
