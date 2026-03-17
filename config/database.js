@@ -13,3 +13,5 @@ const pool = mysql.createPool({
 });
 
 module.exports = pool.promise();
+
+console.log("HOST:", process.env.DB_HOST);
