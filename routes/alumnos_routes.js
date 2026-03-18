@@ -9,7 +9,7 @@ router.post('/', alumno_controller.create);
 // BAJAS
 router.post('/eliminar/:id', alumno_controller.delete);
 
-// EDITAR (🔥 CORREGIDO A PUT)
+// EDITAR 
 router.put('/:id', alumno_controller.update);
 
 // LISTAR
