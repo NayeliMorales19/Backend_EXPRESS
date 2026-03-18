@@ -3,43 +3,85 @@
 const Alumno = require('../model/alumno');
 
 // ===== CREAR =====
-exports.create = function(req,res){
+exports.create = (req,res)=>{
 
-const alumno = new Alumno({
-num_control:req.body.num_control,
-nombre:req.body.nombre,
-primer_ap:req.body.primer_ap,
-segundo_ap:req.body.segundo_ap,
-fecha_nac:req.body.fecha_nac,
-semestre:req.body.semestre,
-carrera:req.body.carrera
-});
+const alumno = new Alumno(req.body);
 
-Alumno.create(alumno,function(err,data){
-
+Alumno.create(alumno,(err,data)=>{
 if(err){
 console.log("ERROR CREATE:", err);
 return res.status(500).json(err);
 }
-
 res.redirect("/");
-
 });
 
 };
 
-// ===== CONSULTA ID =====
-exports.findById = function(req,res){
+// ===== LISTAR =====
+exports.findAll = (req,res)=>{
 
-Alumno.findById(req.params.id,function(err,alumno){
+Alumno.findAll((err,data)=>{
+if(err){
+console.log("ERROR FINDALL:", err);
+return res.status(500).json(err);
+}
+res.json(data);
+});
 
+};
+
+// ===== CONSULTAR =====
+exports.findById = (req,res)=>{
+
+Alumno.findById(req.params.id,(err,data)=>{
 if(err){
 console.log("ERROR FINDID:", err);
 return res.status(500).json(err);
 }
+res.json(data || {});
+});
 
-res.json(alumno); // 🔥 YA ES OBJETO
+};
 
+// ===== ACTUALIZAR =====
+exports.update = (req,res)=>{
+
+const alumno = new Alumno(req.body);
+
+Alumno.update(req.params.id, alumno,(err,data)=>{
+if(err){
+console.log("ERROR UPDATE:", err);
+return res.status(500).json(err);
+}
+res.json({mensaje:"Actualizado correctamente"});
+});
+
+};
+
+// ===== ELIMINAR =====
+exports.delete = (req,res)=>{
+
+Alumno.delete(req.params.id,(err,data)=>{
+if(err){
+console.log("ERROR DELETE:", err);
+return res.status(500).json(err);
+}
+res.json({mensaje:"Eliminado correctamente"});
+});
+
+};
+
+// ===== BUSCAR =====
+exports.search = (req,res)=>{
+
+const texto = req.query.q || "";
+
+Alumno.search(texto,(err,data)=>{
+if(err){
+console.log("ERROR SEARCH:", err);
+return res.status(500).json(err);
+}
+res.json(data);
 });
 
 };
