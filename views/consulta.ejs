@@ -1,22 +1,31 @@
 <script>
 
+window.addEventListener("DOMContentLoaded", () => {
+
 const params = new URLSearchParams(window.location.search)
 const id = params.get("id")
+
+const nc = document.getElementById("nc")
+const nombre = document.getElementById("nombre")
+const ap1 = document.getElementById("ap1")
+const ap2 = document.getElementById("ap2")
+const fecha = document.getElementById("fecha")
+const semestre = document.getElementById("semestre")
+const carrera = document.getElementById("carrera")
 
 fetch("/alumnos/" + id)
 .then(res => res.json())
 .then(a => {
 
-// 🔥 YA NO data[0]
-// 🔥 YA ES OBJETO
+nc.innerText = a.num_control ?? ''
+nombre.innerText = a.nombre ?? ''
+ap1.innerText = a.primer_ap ?? ''
+ap2.innerText = a.segundo_ap ?? ''
+fecha.innerText = a.fecha_nac ?? ''
+semestre.innerText = a.semestre ?? ''
+carrera.innerText = a.carrera ?? ''
 
-document.getElementById("nc").innerText = a.num_control ?? ''
-document.getElementById("nombre").innerText = a.nombre ?? ''
-document.getElementById("ap1").innerText = a.primer_ap ?? ''
-document.getElementById("ap2").innerText = a.segundo_ap ?? ''
-document.getElementById("fecha").innerText = a.fecha_nac ?? ''
-document.getElementById("semestre").innerText = a.semestre ?? ''
-document.getElementById("carrera").innerText = a.carrera ?? ''
+})
 
 })
 

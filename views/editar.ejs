@@ -1,14 +1,22 @@
 <script>
 
+window.addEventListener("DOMContentLoaded", () => {
+
 const params = new URLSearchParams(window.location.search)
 const id = params.get("id")
+
+const num_control = document.getElementById("num_control")
+const nombre = document.getElementById("nombre")
+const primer_ap = document.getElementById("primer_ap")
+const segundo_ap = document.getElementById("segundo_ap")
+const fecha_nac = document.getElementById("fecha_nac")
+const semestre = document.getElementById("semestre")
+const carrera = document.getElementById("carrera")
+const form = document.getElementById("formEditar")
 
 fetch("/alumnos/"+id)
 .then(res=>res.json())
 .then(a=>{
-
-// 🔥 YA NO data[0]
-// 🔥 YA ES OBJETO
 
 num_control.value = a.num_control ?? ''
 nombre.value = a.nombre ?? ''
@@ -20,7 +28,7 @@ carrera.value = a.carrera ?? ''
 
 })
 
-document.getElementById("formEditar").addEventListener("submit",function(e){
+form.addEventListener("submit",function(e){
 
 e.preventDefault()
 
@@ -43,6 +51,8 @@ carrera:carrera.value
 .then(()=>{
 alert("Alumno actualizado")
 window.location="/"
+})
+
 })
 
 })
