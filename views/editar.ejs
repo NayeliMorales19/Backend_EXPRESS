@@ -19,7 +19,12 @@ border:none;
 border-radius:15px;
 box-shadow:0 15px 35px rgba(0,0,0,0.2);
 padding:30px;
-width:400px;
+width:600px;
+}
+
+.form-label{
+font-weight:600;
+color:#444;
 }
 
 input{
@@ -41,22 +46,53 @@ border-radius:10px !important;
 
 <form id="formEditar">
 
-<input id="num_control" class="form-control mb-3" readonly placeholder="Num Control">
+<div class="row">
 
-<input id="nombre" class="form-control mb-3" placeholder="Nombre">
+<!-- NUM CONTROL -->
+<div class="col-md-12 mb-3">
+<label class="form-label">Número de Control</label>
+<input id="num_control" class="form-control" readonly>
+</div>
 
-<input id="primer_ap" class="form-control mb-3" placeholder="Primer Apellido">
+<!-- NOMBRE -->
+<div class="col-md-12 mb-3">
+<label class="form-label">Nombre</label>
+<input id="nombre" class="form-control">
+</div>
 
-<input id="segundo_ap" class="form-control mb-3" placeholder="Segundo Apellido">
+<!-- APELLIDOS -->
+<div class="col-md-6 mb-3">
+<label class="form-label">Primer Apellido</label>
+<input id="primer_ap" class="form-control">
+</div>
 
-<input id="fecha_nac" type="date" class="form-control mb-3">
+<div class="col-md-6 mb-3">
+<label class="form-label">Segundo Apellido</label>
+<input id="segundo_ap" class="form-control">
+</div>
 
-<input id="semestre" class="form-control mb-3" placeholder="Semestre">
+<!-- FECHA -->
+<div class="col-md-6 mb-3">
+<label class="form-label">Fecha de Nacimiento</label>
+<input id="fecha_nac" type="date" class="form-control">
+</div>
 
-<input id="carrera" class="form-control mb-3" placeholder="Carrera">
+<!-- SEMESTRE -->
+<div class="col-md-3 mb-3">
+<label class="form-label">Semestre</label>
+<input id="semestre" class="form-control">
+</div>
 
-<button class="btn btn-success w-100">💾 Guardar Cambios</button>
+<!-- CARRERA -->
+<div class="col-md-3 mb-3">
+<label class="form-label">Carrera</label>
+<input id="carrera" class="form-control">
+</div>
 
+</div>
+
+<!-- BOTONES -->
+<button class="btn btn-success w-100 mt-3">💾 Guardar Cambios</button>
 <a href="/" class="btn btn-secondary w-100 mt-2">⬅ Volver</a>
 
 </form>
