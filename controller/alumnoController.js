@@ -30,30 +30,35 @@ res.json(data);
 
 };
 
-// ===== CONSULTAR =====
-exports.findById = (req,res)=>{
+// ===== CONSULTA ID =====
+exports.findById = function(req,res){
 
-Alumno.findById(req.params.id,(err,data)=>{
+Alumno.findById(req.params.id,function(err,alumno){
+
 if(err){
 console.log("ERROR FINDID:", err);
 return res.status(500).json(err);
 }
-res.json(data || {});
-});
 
+// 🔥 IMPORTANTE (SI VIENE COMO ARRAY)
+res.json(alumno[0]);
+
+});
 };
 
-// ===== ACTUALIZAR =====
-exports.update = (req,res)=>{
 
-const alumno = new Alumno(req.body);
+// ===== UPDATE =====
+exports.update = function(req, res){
 
-Alumno.update(req.params.id, alumno,(err,data)=>{
+Alumno.update(req.params.id, req.body, function(err, data){
+
 if(err){
 console.log("ERROR UPDATE:", err);
 return res.status(500).json(err);
 }
-res.json({mensaje:"Actualizado correctamente"});
+
+res.json({ mensaje: "Alumno actualizado" });
+
 });
 
 };

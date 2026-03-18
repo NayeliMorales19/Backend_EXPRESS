@@ -29,28 +29,27 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // ===== VISTAS =====
-
 app.get('/', (req, res) => {
-  res.render('index', { data: req.flash('message') });
+  res.render('index');
 });
 
 app.get('/altas', (req, res) => {
   res.render('altas');
 });
 
-app.get('/consulta', (req, res) => {
-  res.render('consulta');
-});
-
 app.get('/editar', (req, res) => {
   res.render('editar');
+});
+
+app.get('/consulta', (req, res) => {
+  res.render('consulta');
 });
 
 // ===== RUTAS =====
 const alumno_rutas = require('./routes/alumnos_routes');
 app.use('/alumnos', alumno_rutas);
 
-// ===== PUERTO (IMPORTANTE PARA RENDER) =====
+// ===== PUERTO =====
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

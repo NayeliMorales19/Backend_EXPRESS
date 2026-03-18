@@ -2,7 +2,6 @@
 <html lang="es">
 
 <head>
-
 <meta charset="UTF-8">
 <title>Sistema de Alumnos</title>
 
@@ -24,66 +23,26 @@ padding:25px;
 font-weight:600;
 }
 </style>
-
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-dark bg-primary">
 <div class="container">
-<a class="navbar-brand" href="/">
-<i class="bi bi-mortarboard-fill"></i>
-Sistema de Alumnos
-</a>
+<a class="navbar-brand" href="/">Sistema de Alumnos</a>
 
-<ul class="navbar-nav ms-auto">
-<li class="nav-item">
-<a class="nav-link" href="/altas">
-<i class="bi bi-person-plus"></i>
-Nuevo Alumno
+<a href="/altas" class="btn btn-success">
+<i class="bi bi-person-plus"></i> Nuevo
 </a>
-</li>
-</ul>
-
 </div>
 </nav>
 
-<!-- CONTENIDO -->
 <div class="container mt-5">
-
 <div class="card-box">
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<h3 class="titulo mb-3">Listado de Alumnos</h3>
 
-<h3 class="titulo">
-<i class="bi bi-table"></i>
-Listado de Alumnos
-</h3>
-
-<span class="badge bg-primary fs-6">
-Total: <span id="total">0</span>
-</span>
-
-</div>
-
-<div class="row mb-3">
-
-<div class="col-md-6">
-<input type="text"
-id="buscarAlumno"
-class="form-control"
-placeholder="🔎 Buscar por número de control o nombre">
-</div>
-
-<div class="col-md-6 text-end">
-<a href="/altas" class="btn btn-success">
-<i class="bi bi-person-plus"></i>
-Agregar Alumno
-</a>
-</div>
-
-</div>
+<input type="text" id="buscarAlumno" class="form-control mb-3" placeholder="Buscar...">
 
 <div id="tabla_alumnos"></div>
 
@@ -92,181 +51,95 @@ Agregar Alumno
 
 <script>
 
-// ==========================
-// MOSTRAR TABLA
-// ==========================
+// TABLA
 function mostrarTabla(data){
 
-if(!Array.isArray(data)){
-console.error("Error: respuesta no es array", data);
-return;
-}
-
-if(data.length === 0){
-document.getElementById("tabla_alumnos").innerHTML = `
-<div class="alert alert-warning text-center">
-No hay alumnos registrados
-</div>`;
-return;
-}
-
-let tabla = `
-
-<table class="table table-hover table-striped align-middle">
-
+let html = `
+<table class="table table-bordered">
 <thead class="table-dark">
 <tr>
-<th>NumControl</th>
+<th>Control</th>
 <th>Nombre</th>
-<th>Primer Apellido</th>
-<th>Segundo Apellido</th>
-<th class="text-center">Acciones</th>
+<th>Acciones</th>
 </tr>
 </thead>
-
 <tbody>
-`
+`;
 
 data.forEach(a=>{
-
-tabla += `
-
+html += `
 <tr>
+<td>${a.num_control}</td>
+<td>${a.nombre}</td>
+<td>
 
-<td>${a.num_control ?? ''}</td>
-<td>${a.nombre ?? ''}</td>
-<td>${a.primer_ap ?? ''}</td>
-<td>${a.segundo_ap ?? ''}</td>
-
-<td class="text-center">
-
-<a href="detalle.html?id=${a.num_control}"
-class="btn btn-info btn-sm me-1">
-<i class="bi bi-eye"></i>
+<a href="/consulta?id=${a.num_control}" class="btn btn-info btn-sm">
+Consultar
 </a>
 
-<a href="editar.html?id=${a.num_control}"
-class="btn btn-warning btn-sm me-1">
-<i class="bi bi-pencil"></i>
+<a href="/editar?id=${a.num_control}" class="btn btn-warning btn-sm">
+Editar
 </a>
 
 <button class="btn btn-danger btn-sm"
 onclick="eliminarAlumno('${a.num_control}')">
-<i class="bi bi-trash"></i>
+Eliminar
 </button>
 
 </td>
-
 </tr>
-`
-})
+`;
+});
 
-tabla += `
-</tbody>
-</table>
-`
+html += "</tbody></table>";
 
-document.getElementById("tabla_alumnos").innerHTML = tabla
-document.getElementById("total").innerText = data.length
+document.getElementById("tabla_alumnos").innerHTML = html;
 }
 
-
-// ==========================
-// CARGAR ALUMNOS
-// ==========================
+// CARGAR
 function cargarAlumnos(){
-
 fetch("/alumnos")
-.then(res => {
-if(!res.ok) throw new Error()
-return res.json()
-})
-.then(data => mostrarTabla(data))
-.catch(err => {
-console.error("Error cargando alumnos:", err)
-Swal.fire("Error","No se pudieron cargar los alumnos","error")
-})
-
+.then(res => res.json())
+.then(data => mostrarTabla(data));
 }
 
-
-// ==========================
 // ELIMINAR
-// ==========================
 function eliminarAlumno(id){
 
 Swal.fire({
-title:"¿Eliminar alumno?",
-text:"Esta acción no se puede deshacer",
+title:"¿Eliminar?",
 icon:"warning",
-showCancelButton:true,
-confirmButtonColor:"#d33",
-confirmButtonText:"Eliminar",
-cancelButtonText:"Cancelar"
-})
+showCancelButton:true
+}).then(r=>{
 
-.then(result=>{
+if(r.isConfirmed){
 
-if(result.isConfirmed){
-
-fetch("/alumnos/eliminar/"+id,{
-method:"POST"
-})
-.then(res=>{
-if(!res.ok) throw new Error()
-return res.json()
-})
-.then(()=>{
-
-Swal.fire(
-"Eliminado",
-"El alumno fue eliminado correctamente",
-"success"
-)
-
-cargarAlumnos()
-
-})
-.catch(()=>{
-Swal.fire("Error","No se pudo eliminar","error")
-})
+fetch("/alumnos/eliminar/"+id,{method:"POST"})
+.then(()=>cargarAlumnos());
 
 }
 
-})
+});
 
 }
 
-
-// ==========================
 // BUSCAR
-// ==========================
 document.getElementById("buscarAlumno").addEventListener("keyup",function(){
 
-let texto = this.value.trim()
+let texto = this.value;
 
-if(texto.length === 0){
-cargarAlumnos()
-return
+if(texto === ""){
+cargarAlumnos();
+return;
 }
 
 fetch("/alumnos/buscar?q="+texto)
-.then(res => {
-if(!res.ok) throw new Error()
-return res.json()
-})
-.then(data => mostrarTabla(data))
-.catch(err=>{
-console.error("Error en búsqueda:", err)
-})
+.then(res=>res.json())
+.then(data=>mostrarTabla(data));
 
-})
+});
 
-
-// ==========================
-// INICIO
-// ==========================
-cargarAlumnos()
+cargarAlumnos();
 
 </script>
 
