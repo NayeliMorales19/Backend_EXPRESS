@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Editar Alumno</title>
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
 body{
@@ -19,7 +22,7 @@ border:none;
 border-radius:15px;
 box-shadow:0 15px 35px rgba(0,0,0,0.2);
 padding:30px;
-width:600px;
+width:650px;
 }
 
 .form-label{
@@ -27,12 +30,16 @@ font-weight:600;
 color:#444;
 }
 
-input{
+.form-control, .form-select{
 border-radius:10px !important;
 }
 
 button{
 border-radius:10px !important;
+}
+
+.titulo{
+font-weight:700;
 }
 </style>
 
@@ -42,7 +49,9 @@ border-radius:10px !important;
 
 <div class="card card-custom">
 
-<h3 class="text-center mb-4 text-primary">✏ Editar Alumno</h3>
+<h3 class="text-center mb-4 text-primary titulo">
+<i class="bi bi-pencil-square"></i> Editar Alumno
+</h3>
 
 <form id="formEditar">
 
@@ -51,48 +60,66 @@ border-radius:10px !important;
 <!-- NUM CONTROL -->
 <div class="col-md-12 mb-3">
 <label class="form-label">Número de Control</label>
+<div class="input-group">
+<span class="input-group-text"><i class="bi bi-hash"></i></span>
 <input id="num_control" class="form-control" readonly>
+</div>
 </div>
 
 <!-- NOMBRE -->
 <div class="col-md-12 mb-3">
 <label class="form-label">Nombre</label>
-<input id="nombre" class="form-control">
+<div class="input-group">
+<span class="input-group-text"><i class="bi bi-person"></i></span>
+<input id="nombre" class="form-control" required>
+</div>
 </div>
 
 <!-- APELLIDOS -->
 <div class="col-md-6 mb-3">
 <label class="form-label">Primer Apellido</label>
-<input id="primer_ap" class="form-control">
+<input id="primer_ap" class="form-control" required>
 </div>
 
 <div class="col-md-6 mb-3">
 <label class="form-label">Segundo Apellido</label>
-<input id="segundo_ap" class="form-control">
+<input id="segundo_ap" class="form-control" required>
 </div>
 
 <!-- FECHA -->
 <div class="col-md-6 mb-3">
 <label class="form-label">Fecha de Nacimiento</label>
-<input id="fecha_nac" type="date" class="form-control">
+<input id="fecha_nac" type="date" class="form-control" required>
 </div>
 
-<!-- SEMESTRE -->
+<!-- SEMESTRE (SELECT) -->
 <div class="col-md-3 mb-3">
 <label class="form-label">Semestre</label>
-<input id="semestre" class="form-control">
+<select id="semestre" class="form-select" required>
+<option value="">Seleccionar</option>
+</select>
 </div>
 
-<!-- CARRERA -->
+<!-- CARRERA (SELECT) -->
 <div class="col-md-3 mb-3">
 <label class="form-label">Carrera</label>
-<input id="carrera" class="form-control">
+<select id="carrera" class="form-select" required>
+<option value="">Seleccionar</option>
+<option>Ingeniería en Sistemas Computacionales</option>
+<option>Ingeniería en Industrias Alimentarias</option>
+<option>Ingeniería en Mecatrónica</option>
+<option>Licenciatura en Administración</option>
+<option>Licenciatura en Contador Público</option>
+</select>
 </div>
 
 </div>
 
 <!-- BOTONES -->
-<button class="btn btn-success w-100 mt-3">💾 Guardar Cambios</button>
+<button class="btn btn-success w-100 mt-3" id="btnGuardar">
+💾 Guardar Cambios
+</button>
+
 <a href="/" class="btn btn-secondary w-100 mt-2">⬅ Volver</a>
 
 </form>
@@ -101,10 +128,18 @@ border-radius:10px !important;
 
 <script>
 
+// GENERAR SEMESTRES 1-14
+for(let i=1;i<=14;i++){
+let option = document.createElement("option");
+option.value = i;
+option.text = i;
+document.getElementById("semestre").appendChild(option);
+}
+
 const id = new URLSearchParams(window.location.search).get("id");
 
 if(!id){
-alert("ID no encontrado");
+Swal.fire("Error","ID no encontrado","error");
 window.location="/";
 }
 
@@ -123,10 +158,25 @@ document.getElementById("carrera").value = a.carrera || '';
 
 });
 
-// ACTUALIZAR
+// VALIDACIÓN + ACTUALIZAR
 document.getElementById("formEditar").addEventListener("submit", function(e){
 
 e.preventDefault();
+
+// VALIDAR CAMPOS
+let nombre = document.getElementById("nombre").value.trim();
+
+if(nombre === ""){
+Swal.fire("Error","El nombre es obligatorio","warning");
+return;
+}
+
+// LOADER
+Swal.fire({
+title:"Guardando...",
+allowOutsideClick:false,
+didOpen:()=>{ Swal.showLoading(); }
+});
 
 fetch("/alumnos/"+id,{
 method:"PUT",
@@ -142,8 +192,15 @@ carrera:document.getElementById("carrera").value
 })
 })
 .then(()=>{
-alert("Actualizado correctamente");
+
+Swal.fire({
+icon:"success",
+title:"Actualizado correctamente",
+confirmButtonText:"OK"
+}).then(()=>{
 window.location="/";
+});
+
 });
 
 });
