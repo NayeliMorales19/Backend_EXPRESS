@@ -1,9 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Detalle</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+<h3>Detalle Alumno</h3>
+
+<p><b>NumControl:</b> <span id="nc"></span></p>
+<p><b>Nombre:</b> <span id="nombre"></span></p>
+<p><b>Primer Apellido:</b> <span id="ap1"></span></p>
+<p><b>Segundo Apellido:</b> <span id="ap2"></span></p>
+<p><b>Fecha:</b> <span id="fecha"></span></p>
+<p><b>Semestre:</b> <span id="semestre"></span></p>
+<p><b>Carrera:</b> <span id="carrera"></span></p>
+
+<a href="/" class="btn btn-primary">Volver</a>
+
+</div>
+
 <script>
-
-window.addEventListener("DOMContentLoaded", () => {
-
-const params = new URLSearchParams(window.location.search)
-const id = params.get("id")
 
 const nc = document.getElementById("nc")
 const nombre = document.getElementById("nombre")
@@ -13,20 +34,24 @@ const fecha = document.getElementById("fecha")
 const semestre = document.getElementById("semestre")
 const carrera = document.getElementById("carrera")
 
-fetch("/alumnos/" + id)
-.then(res => res.json())
-.then(a => {
+const params = new URLSearchParams(window.location.search)
+const id = params.get("id")
 
-nc.innerText = a.num_control ?? ''
-nombre.innerText = a.nombre ?? ''
-ap1.innerText = a.primer_ap ?? ''
-ap2.innerText = a.segundo_ap ?? ''
-fecha.innerText = a.fecha_nac ?? ''
-semestre.innerText = a.semestre ?? ''
-carrera.innerText = a.carrera ?? ''
+fetch("/alumnos/"+id)
+.then(res=>res.json())
+.then(a=>{
 
-})
+nc.innerText = a.num_control || ''
+nombre.innerText = a.nombre || ''
+ap1.innerText = a.primer_ap || ''
+ap2.innerText = a.segundo_ap || ''
+fecha.innerText = a.fecha_nac || ''
+semestre.innerText = a.semestre || ''
+carrera.innerText = a.carrera || ''
 
 })
 
 </script>
+
+</body>
+</html>

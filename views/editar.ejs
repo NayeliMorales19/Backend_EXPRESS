@@ -1,9 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Editar Alumno</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+<h3>Editar Alumno</h3>
+
+<form id="formEditar">
+
+<input id="num_control" class="form-control mb-2" readonly>
+<input id="nombre" class="form-control mb-2">
+<input id="primer_ap" class="form-control mb-2">
+<input id="segundo_ap" class="form-control mb-2">
+<input id="fecha_nac" type="date" class="form-control mb-2">
+<input id="semestre" class="form-control mb-2">
+<input id="carrera" class="form-control mb-2">
+
+<button class="btn btn-success">Guardar</button>
+
+</form>
+
+</div>
+
 <script>
-
-window.addEventListener("DOMContentLoaded", () => {
-
-const params = new URLSearchParams(window.location.search)
-const id = params.get("id")
 
 const num_control = document.getElementById("num_control")
 const nombre = document.getElementById("nombre")
@@ -14,17 +39,20 @@ const semestre = document.getElementById("semestre")
 const carrera = document.getElementById("carrera")
 const form = document.getElementById("formEditar")
 
+const params = new URLSearchParams(window.location.search)
+const id = params.get("id")
+
 fetch("/alumnos/"+id)
 .then(res=>res.json())
 .then(a=>{
 
-num_control.value = a.num_control ?? ''
-nombre.value = a.nombre ?? ''
-primer_ap.value = a.primer_ap ?? ''
-segundo_ap.value = a.segundo_ap ?? ''
+num_control.value = a.num_control || ''
+nombre.value = a.nombre || ''
+primer_ap.value = a.primer_ap || ''
+segundo_ap.value = a.segundo_ap || ''
 fecha_nac.value = a.fecha_nac ? a.fecha_nac.split('T')[0] : ''
-semestre.value = a.semestre ?? ''
-carrera.value = a.carrera ?? ''
+semestre.value = a.semestre || ''
+carrera.value = a.carrera || ''
 
 })
 
@@ -49,12 +77,13 @@ carrera:carrera.value
 })
 
 .then(()=>{
-alert("Alumno actualizado")
+alert("Actualizado")
 window.location="/"
 })
 
 })
 
-})
-
 </script>
+
+</body>
+</html>
