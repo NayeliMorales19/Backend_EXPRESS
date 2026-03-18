@@ -114,7 +114,9 @@ showCancelButton:true
 
 if(r.isConfirmed){
 
-fetch("/alumnos/eliminar/"+id,{method:"POST"})
+fetch("/alumnos/"+id,{
+method:"DELETE"
+})
 .then(()=>cargarAlumnos());
 
 }

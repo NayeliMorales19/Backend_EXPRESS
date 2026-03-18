@@ -40,8 +40,12 @@ console.log("ERROR FINDID:", err);
 return res.status(500).json(err);
 }
 
-// 🔥 IMPORTANTE (SI VIENE COMO ARRAY)
-res.json(alumno[0]);
+if(!alumno){
+return res.status(404).json({mensaje:"Alumno no encontrado"});
+}
+
+// ✅ CORRECTO (SIN [0])
+res.json(alumno);
 
 });
 };
@@ -87,12 +91,8 @@ console.log("ERROR SEARCH:", err);
 return res.status(500).json(err);
 }
 
-// 🔥 SI NO EXISTE
-if(!alumno){
-return res.status(404).json({mensaje:"Alumno no encontrado"});
-}
-
-res.json(alumno);
+// ✅ CORRECTO (USAR data)
+res.json(data);
 
 });
 

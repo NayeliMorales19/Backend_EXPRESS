@@ -45,6 +45,9 @@ document.getElementById("fecha").innerText = a.fecha_nac ? a.fecha_nac.substring
 document.getElementById("semestre").innerText = a.semestre || '';
 document.getElementById("carrera").innerText = a.carrera || '';
 
+})
+.catch(()=>{
+alert("Error al cargar datos");
 });
 
 </script>
