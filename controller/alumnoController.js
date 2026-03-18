@@ -86,7 +86,14 @@ if(err){
 console.log("ERROR SEARCH:", err);
 return res.status(500).json(err);
 }
-res.json(data);
+
+// 🔥 SI NO EXISTE
+if(!alumno){
+return res.status(404).json({mensaje:"Alumno no encontrado"});
+}
+
+res.json(alumno);
+
 });
 
 };
