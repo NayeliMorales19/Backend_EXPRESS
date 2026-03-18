@@ -3,13 +3,13 @@
 const db = require('../config/database');
 
 let Alumno = function(alumno){
-this.NumControl = alumno.NumControl;
-this.Nombre = alumno.Nombre;
-this.PrimerAp = alumno.PrimerAp;
-this.SegundoAp = alumno.SegundoAp;
-this.FechaNac = alumno.FechaNac;
-this.Semestre = alumno.Semestre;
-this.Carrera = alumno.Carrera;
+this.num_control = alumno.num_control;
+this.nombre = alumno.nombre;
+this.primer_ap = alumno.primer_ap;
+this.segundo_ap = alumno.segundo_ap;
+this.fecha_nac = alumno.fecha_nac;
+this.semestre = alumno.semestre;
+this.carrera = alumno.carrera;
 };
 
 // ===== CREAR =====
@@ -20,13 +20,13 @@ const [res] = await db.query(
 (num_control,nombre,primer_ap,segundo_ap,fecha_nac,semestre,carrera)
 VALUES (?,?,?,?,?,?,?)`,
 [
-alumno.NumControl,
-alumno.Nombre,
-alumno.PrimerAp,
-alumno.SegundoAp,
-alumno.FechaNac,
-alumno.Semestre,
-alumno.Carrera
+alumno.num_control,
+alumno.nombre,
+alumno.primer_ap,
+alumno.segundo_ap,
+alumno.fecha_nac,
+alumno.semestre,
+alumno.carrera
 ]
 );
 result(null, res);
@@ -54,7 +54,7 @@ const [rows] = await db.query(
 "SELECT * FROM alumnos WHERE num_control=?",
 [id]
 );
-result(null, rows);
+result(null, rows[0]); // 🔥 IMPORTANTE
 } catch(err) {
 console.log(err);
 result(err, null);
@@ -83,12 +83,12 @@ const [res] = await db.query(
 SET nombre=?, primer_ap=?, segundo_ap=?, fecha_nac=?, semestre=?, carrera=? 
 WHERE num_control=?`,
 [
-alumno.Nombre,
-alumno.PrimerAp,
-alumno.SegundoAp,
-alumno.FechaNac,
-alumno.Semestre,
-alumno.Carrera,
+alumno.nombre,
+alumno.primer_ap,
+alumno.segundo_ap,
+alumno.fecha_nac,
+alumno.semestre,
+alumno.carrera,
 id
 ]
 );

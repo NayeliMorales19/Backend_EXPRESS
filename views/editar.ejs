@@ -14,15 +14,15 @@
 
 <form id="formEditar">
 
-<input id="num_control" class="form-control mb-2" readonly>
-<input id="nombre" class="form-control mb-2">
-<input id="primer_ap" class="form-control mb-2">
-<input id="segundo_ap" class="form-control mb-2">
+<input id="num_control" class="form-control mb-2" readonly placeholder="Número de Control">
+<input id="nombre" class="form-control mb-2" placeholder="Nombre">
+<input id="primer_ap" class="form-control mb-2" placeholder="Primer Apellido">
+<input id="segundo_ap" class="form-control mb-2" placeholder="Segundo Apellido">
 <input id="fecha_nac" type="date" class="form-control mb-2">
-<input id="semestre" class="form-control mb-2">
-<input id="carrera" class="form-control mb-2">
+<input id="semestre" class="form-control mb-2" placeholder="Semestre">
+<input id="carrera" class="form-control mb-2" placeholder="Carrera">
 
-<button class="btn btn-success">Guardar</button>
+<button class="btn btn-success w-100">Guardar</button>
 
 </form>
 
@@ -30,6 +30,7 @@
 
 <script>
 
+// REFERENCIAS
 const num_control = document.getElementById("num_control")
 const nombre = document.getElementById("nombre")
 const primer_ap = document.getElementById("primer_ap")
@@ -39,47 +40,63 @@ const semestre = document.getElementById("semestre")
 const carrera = document.getElementById("carrera")
 const form = document.getElementById("formEditar")
 
+// OBTENER ID DESDE URL
 const params = new URLSearchParams(window.location.search)
 const id = params.get("id")
 
+// VALIDACIÓN
+if(!id){
+    alert("ID no encontrado en la URL")
+    window.location="/"
+}
+
+// CARGAR DATOS
 fetch("/alumnos/"+id)
-.then(res=>res.json())
-.then(a=>{
+.then(res => res.json())
+.then(a => {
 
-num_control.value = a.num_control || ''
-nombre.value = a.nombre || ''
-primer_ap.value = a.primer_ap || ''
-segundo_ap.value = a.segundo_ap || ''
-fecha_nac.value = a.fecha_nac ? a.fecha_nac.split('T')[0] : ''
-semestre.value = a.semestre || ''
-carrera.value = a.carrera || ''
-
-})
-
-form.addEventListener("submit",function(e){
-
-e.preventDefault()
-
-fetch("/alumnos/"+id,{
-method:"POST",
-headers:{ "Content-Type":"application/json" },
-body:JSON.stringify({
-
-num_control:num_control.value,
-nombre:nombre.value,
-primer_ap:primer_ap.value,
-segundo_ap:segundo_ap.value,
-fecha_nac:fecha_nac.value,
-semestre:semestre.value,
-carrera:carrera.value
+    num_control.value = a.num_control || ''
+    nombre.value = a.nombre || ''
+    primer_ap.value = a.primer_ap || ''
+    segundo_ap.value = a.segundo_ap || ''
+    fecha_nac.value = a.fecha_nac ? a.fecha_nac.substring(0,10) : ''
+    semestre.value = a.semestre || ''
+    carrera.value = a.carrera || ''
 
 })
+.catch(() => {
+    alert("Error al cargar datos")
 })
 
-.then(()=>{
-alert("Actualizado")
-window.location="/"
-})
+// ACTUALIZAR
+form.addEventListener("submit", function(e){
+
+    e.preventDefault()
+
+    fetch("/alumnos/"+id,{
+        method:"PUT", // 🔥 IMPORTANTE
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({
+            num_control:num_control.value,
+            nombre:nombre.value,
+            primer_ap:primer_ap.value,
+            segundo_ap:segundo_ap.value,
+            fecha_nac:fecha_nac.value,
+            semestre:semestre.value,
+            carrera:carrera.value
+        })
+    })
+    .then(res => {
+        if(!res.ok) throw new Error()
+        return res.json()
+    })
+    .then(() => {
+        alert("Alumno actualizado correctamente")
+        window.location="/"
+    })
+    .catch(() => {
+        alert("Error al actualizar")
+    })
 
 })
 
