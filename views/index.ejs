@@ -10,18 +10,64 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
+
 body{
-background:#f4f6f9;
+background: linear-gradient(135deg,#4e73df,#1cc88a);
+min-height:100vh;
 }
+
+.navbar{
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
 .card-box{
 background:white;
-border-radius:12px;
-box-shadow:0 10px 25px rgba(0,0,0,0.1);
-padding:25px;
+border-radius:20px;
+box-shadow:0 20px 40px rgba(0,0,0,0.2);
+padding:30px;
 }
+
 .titulo{
+font-weight:700;
+color:#4e73df;
+}
+
+.search-box{
+position:relative;
+}
+
+.search-box i{
+position:absolute;
+top:10px;
+left:10px;
+color:#888;
+}
+
+.search-box input{
+padding-left:35px;
+border-radius:10px;
+}
+
+.table{
+border-radius:10px;
+overflow:hidden;
+}
+
+.table thead{
+background:#4e73df;
+color:white;
+}
+
+.table tbody tr:hover{
+background:#f1f3f9;
+transition:0.2s;
+}
+
+.btn{
+border-radius:10px;
 font-weight:600;
 }
+
 </style>
 </head>
 
@@ -29,24 +75,39 @@ font-weight:600;
 
 <nav class="navbar navbar-dark bg-primary">
 <div class="container">
-<a class="navbar-brand" href="/">Sistema de Alumnos</a>
+
+<a class="navbar-brand fw-bold" href="/">
+<i class="bi bi-mortarboard-fill"></i> Sistema de Alumnos
+</a>
 
 <a href="/altas" class="btn btn-success">
-<i class="bi bi-person-plus"></i> Nuevo
+<i class="bi bi-person-plus-fill"></i> Nuevo Alumno
 </a>
+
 </div>
 </nav>
 
 <div class="container mt-5">
+
 <div class="card-box">
 
-<h3 class="titulo mb-3">Listado de Alumnos</h3>
+<h3 class="titulo mb-4">
+<i class="bi bi-people-fill"></i> Listado de Alumnos
+</h3>
 
-<input type="text" id="buscarAlumno" class="form-control mb-3" placeholder="Buscar...">
+<!-- BUSCADOR -->
+<div class="search-box mb-4">
+<i class="bi bi-search"></i>
+<input type="text" id="buscarAlumno" class="form-control" placeholder="Buscar alumno por nombre o control...">
+</div>
 
+<!-- TABLA -->
+<div class="table-responsive">
 <div id="tabla_alumnos"></div>
+</div>
 
 </div>
+
 </div>
 
 <script>
@@ -55,12 +116,12 @@ font-weight:600;
 function mostrarTabla(data){
 
 let html = `
-<table class="table table-bordered">
-<thead class="table-dark">
+<table class="table align-middle">
+<thead>
 <tr>
 <th>Control</th>
 <th>Nombre</th>
-<th>Acciones</th>
+<th class="text-center">Acciones</th>
 </tr>
 </thead>
 <tbody>
@@ -69,21 +130,21 @@ let html = `
 data.forEach(a=>{
 html += `
 <tr>
-<td>${a.num_control}</td>
+<td><strong>${a.num_control}</strong></td>
 <td>${a.nombre}</td>
-<td>
+<td class="text-center">
 
-<a href="/consulta?id=${a.num_control}" class="btn btn-info btn-sm">
-Consultar
+<a href="/consulta?id=${a.num_control}" class="btn btn-info btn-sm me-1">
+<i class="bi bi-eye"></i>
 </a>
 
-<a href="/editar?id=${a.num_control}" class="btn btn-warning btn-sm">
-Editar
+<a href="/editar?id=${a.num_control}" class="btn btn-warning btn-sm me-1">
+<i class="bi bi-pencil"></i>
 </a>
 
 <button class="btn btn-danger btn-sm"
 onclick="eliminarAlumno('${a.num_control}')">
-Eliminar
+<i class="bi bi-trash"></i>
 </button>
 
 </td>
@@ -107,9 +168,13 @@ fetch("/alumnos")
 function eliminarAlumno(id){
 
 Swal.fire({
-title:"¿Eliminar?",
+title:"¿Eliminar alumno?",
+text:"Esta acción no se puede deshacer",
 icon:"warning",
-showCancelButton:true
+showCancelButton:true,
+confirmButtonColor:"#d33",
+cancelButtonColor:"#6c757d",
+confirmButtonText:"Sí, eliminar"
 }).then(r=>{
 
 if(r.isConfirmed){
@@ -117,7 +182,10 @@ if(r.isConfirmed){
 fetch("/alumnos/"+id,{
 method:"DELETE"
 })
-.then(()=>cargarAlumnos());
+.then(()=>{
+Swal.fire("Eliminado","","success");
+cargarAlumnos();
+});
 
 }
 
